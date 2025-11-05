@@ -90,9 +90,15 @@
                     
                     <form id="request-form">
                         <div class="form-group">
-                            <label for="request-recipient">Recipient Name/Email *</label>
-                            <input type="text" id="request-recipient" name="request-recipient" 
-                                   placeholder="Who should give consent?" required>
+                            <label for="request-recipient-name">Recipient Name *</label>
+                            <input type="text" id="request-recipient-name" name="request-recipient-name" 
+                                   placeholder="Full name of the person" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="request-recipient-email">Recipient Email *</label>
+                            <input type="email" id="request-recipient-email" name="request-recipient-email" 
+                                   placeholder="email@example.com" required>
                         </div>
 
                         <div class="form-group">
@@ -141,6 +147,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=20251105-2300"></script>
+    <script src="script.js?v=20251105-2315"></script>
 </body>
 </html>

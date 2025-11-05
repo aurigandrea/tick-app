@@ -376,8 +376,8 @@ class ConsentApp {
         }
 
         const templateParams = {
-            to_email: consentRequest.recipient,
-            to_name: consentRequest.recipient,
+            to_email: consentRequest.recipientEmail,
+            to_name: consentRequest.recipientName,
             from_name: consentRequest.requesterName,
             from_email: consentRequest.requester,
             activity: consentRequest.activity,
@@ -419,7 +419,8 @@ class ConsentApp {
             const formData = new FormData(form);
             const consentRequest = {
                 id: this.generateId(),
-                recipient: formData.get('request-recipient'),
+                recipientName: formData.get('request-recipient-name'),
+                recipientEmail: formData.get('request-recipient-email'),
                 activity: formData.get('request-activity'),
                 details: formData.get('request-details'),
                 deadline: formData.get('request-deadline'),
@@ -429,13 +430,13 @@ class ConsentApp {
                 status: 'pending'
             };
 
-            if (!consentRequest.recipient || !consentRequest.activity) {
-                throw new Error('Please fill in recipient and activity fields.');
+            if (!consentRequest.recipientName || !consentRequest.recipientEmail || !consentRequest.activity) {
+                throw new Error('Please fill in all required fields.');
             }
 
             // Validate email format
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(consentRequest.recipient)) {
+            if (!emailRegex.test(consentRequest.recipientEmail)) {
                 throw new Error('Please enter a valid email address for the recipient.');
             }
 
@@ -504,7 +505,7 @@ class ConsentApp {
             return `
                 <div class="pending-item ${isUrgent ? 'urgent' : ''}">
                     <div class="pending-header">
-                        <div class="pending-recipient">👤 ${this.escapeHtml(request.recipient)}</div>
+                        <div class="pending-recipient">👤 ${this.escapeHtml(request.recipientName || request.recipient)} (${this.escapeHtml(request.recipientEmail || request.recipient)})</div>
                         <span class="pending-status">⏳ Pending</span>
                     </div>
                     <div class="pending-activity">
