@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consent Recording App</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Authentication Section -->
+        <div id="auth-section" class="auth-section">
+            <h1>🔒 Consent App</h1>
+            <p>Please log in to access the consent recording system.</p>
+            <div id="netlify-identity-button"></div>
+        </div>
+
+        <!-- Main App Section (hidden until authenticated) -->
+        <div id="app-section" class="app-section" style="display: none;">
+            <header>
+                <h1>Consent Recording System</h1>
+                <div class="user-info">
+                    <span id="user-email"></span>
+                    <button id="logout-btn" class="logout-btn">Logout</button>
+                </div>
+            </header>
+
+            <!-- Navigation -->
+            <nav class="nav-tabs">
+                <button id="record-tab" class="tab-btn active">Record Consent</button>
+                <button id="view-tab" class="tab-btn">View Records</button>
+            </nav>
+
+            <!-- Record Consent Tab -->
+            <div id="record-section" class="tab-content active">
+                <div class="consent-form">
+                    <h2>Record New Consent</h2>
+                    
+                    <div class="consent-prompt">
+                        <h3>What are you giving consent to?</h3>
+                        <p>By proceeding, you acknowledge that you understand and agree to the following:</p>
+                        <ul>
+                            <li>Your consent information will be securely recorded</li>
+                            <li>This record serves as proof of your agreement</li>
+                            <li>You may revoke consent at any time by contacting the administrator but it might be too late</li>
+                        </ul>
+                    </div>
+
+                    <form id="consent-form">
+                        <div class="form-group">
+                            <label for="username">Name *</label>
+                            <input type="text" id="username" name="username" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="activity">Activity/Purpose *</label>
+                            <textarea id="activity" name="activity" rows="3" placeholder="Describe what you are giving consent for..." required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="consent-date">Date *</label>
+                            <input type="date" id="consent-date" name="consent-date" required>
+                        </div>
+
+                        <div class="consent-checkbox">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="consent-check" required>
+                                <span class="checkmark">✓</span>
+                                I hereby give my explicit consent for the activity described above
+                            </label>
+                        </div>
+
+                        <button type="submit" class="submit-btn">📋 Record Consent</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- View Records Tab -->
+            <div id="view-section" class="tab-content">
+                <div class="records-view">
+                    <h2>🔍 All Consent Records</h2>
+                    <p style="color: #718096; margin-bottom: 20px;">View all recorded consent submissions from all users</p>
+                    <div class="records-filter">
+                        <input type="text" id="search-filter" placeholder="Search by name, activity, or user email...">
+                    </div>
+                    <div id="records-list" class="records-list">
+                        <!-- Records will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,408 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Authentication Section */
+.auth-section {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 60px 40px;
+    text-align: center;
+    margin-top: 10vh;
+}
+
+.auth-section h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #4a5568;
+}
+
+.auth-section p {
+    font-size: 1.1rem;
+    color: #718096;
+    margin-bottom: 30px;
+}
+
+/* Main App Section */
+.app-section {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+header {
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    color: white;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 1.8rem;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logout-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+    display: flex;
+    background: #f7fafc;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 15px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-btn.active {
+    background: white;
+    border-bottom-color: #667eea;
+    color: #667eea;
+    font-weight: 600;
+}
+
+.tab-btn:hover:not(.active) {
+    background: #edf2f7;
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    padding: 30px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Consent Form */
+.consent-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.consent-prompt {
+    background: #fff5f5;
+    border: 1px solid #fed7d7;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.consent-prompt h3 {
+    color: #c53030;
+    margin-bottom: 10px;
+}
+
+.consent-prompt ul {
+    margin-left: 20px;
+    color: #4a5568;
+}
+
+.consent-prompt li {
+    margin-bottom: 5px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Consent Checkbox */
+.consent-checkbox {
+    margin: 30px 0;
+    padding: 20px;
+    background: #f0fff4;
+    border: 2px solid #9ae6b4;
+    border-radius: 8px;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.checkbox-container input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 24px;
+    height: 24px;
+    background: white;
+    border: 2px solid #38a169;
+    border-radius: 4px;
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: transparent;
+    transition: all 0.3s ease;
+}
+
+.checkbox-container input[type="checkbox"]:checked + .checkmark {
+    background: #38a169;
+    color: white;
+}
+
+/* Submit Button */
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(56, 161, 105, 0.3);
+}
+
+.submit-btn:disabled {
+    background: #cbd5e0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Records View */
+.records-view {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.records-filter {
+    margin-bottom: 20px;
+}
+
+.records-filter input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+
+.record-item {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.record-item:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.record-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.record-name {
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 1.1rem;
+}
+
+.record-date {
+    color: #718096;
+    font-size: 0.9rem;
+}
+
+.record-activity {
+    color: #4a5568;
+    margin-bottom: 10px;
+}
+
+.record-status {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #c6f6d5;
+    color: #22543d;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.no-records {
+    text-align: center;
+    padding: 40px;
+    color: #718096;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .auth-section {
+        padding: 40px 20px;
+        margin-top: 5vh;
+    }
+    
+    .auth-section h1 {
+        font-size: 2rem;
+    }
+    
+    header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .tab-content {
+        padding: 20px;
+    }
+    
+    .consent-form,
+    .records-view {
+        max-width: 100%;
+    }
+    
+    .record-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-tabs {
+        flex-direction: column;
+    }
+    
+    .tab-btn {
+        border-bottom: none;
+        border-left: 3px solid transparent;
+    }
+    
+    .tab-btn.active {
+        border-left-color: #667eea;
+        border-bottom: none;
+    }
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Success Message */
+.success-message {
+    background: #c6f6d5;
+    color: #22543d;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #9ae6b4;
+}
+
+.error-message {
+    background: #fed7d7;
+    color: #c53030;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #fc8181;
+}
