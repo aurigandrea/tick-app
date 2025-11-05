@@ -65,9 +65,11 @@ class ConsentApp {
     }
 
     logoutUser() {
+        console.log('logoutUser called');
         this.currentUser = null;
         this.records = [];
         this.showLoginScreen();
+        console.log('Logout complete, should show login screen');
     }
 
     showLoginScreen() {
@@ -120,12 +122,18 @@ class ConsentApp {
 
         // Logout button
         const logoutBtn = document.getElementById('logout-btn');
+        console.log('Logout button found:', !!logoutBtn);
         if (logoutBtn) {
             logoutBtn.addEventListener('click', () => {
+                console.log('Logout button clicked');
                 if (window.netlifyIdentity) {
+                    console.log('Calling netlifyIdentity.logout()');
                     window.netlifyIdentity.logout();
+                } else {
+                    console.log('netlifyIdentity not available');
                 }
             });
+            console.log('Logout event listener added');
         }
 
         // Search filter
