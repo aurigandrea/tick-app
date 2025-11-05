@@ -33,6 +33,7 @@
             <!-- Navigation -->
             <nav class="nav-tabs">
                 <button id="record-tab" class="tab-btn active">Record Consent</button>
+                <button id="request-tab" class="tab-btn">Request Consent</button>
                 <button id="view-tab" class="tab-btn">View Records</button>
             </nav>
 
@@ -77,6 +78,49 @@
 
                         <button type="submit" class="submit-btn">📋 Record Consent</button>
                     </form>
+                </div>
+            </div>
+
+            <!-- Request Consent Tab -->
+            <div id="request-section" class="tab-content">
+                <div class="request-form">
+                    <h2>📤 Request Consent from Others</h2>
+                    <p style="color: #718096; margin-bottom: 30px;">Send a consent request that others can respond to by logging in</p>
+                    
+                    <form id="request-form">
+                        <div class="form-group">
+                            <label for="request-recipient">Recipient Name/Email *</label>
+                            <input type="text" id="request-recipient" name="request-recipient" 
+                                   placeholder="Who should give consent?" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="request-activity">Activity Requiring Consent *</label>
+                            <textarea id="request-activity" name="request-activity" rows="4" 
+                                      placeholder="Describe what you need consent for..." required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="request-details">Additional Details</label>
+                            <textarea id="request-details" name="request-details" rows="3" 
+                                      placeholder="Any additional information or context..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="request-deadline">Response Deadline (Optional)</label>
+                            <input type="date" id="request-deadline" name="request-deadline">
+                        </div>
+
+                        <button type="submit" class="submit-btn">📤 Send Consent Request</button>
+                    </form>
+
+                    <!-- Pending Requests -->
+                    <div class="pending-requests">
+                        <h3>📋 Pending Consent Requests</h3>
+                        <div id="pending-list" class="pending-list">
+                            <!-- Pending requests will be shown here -->
+                        </div>
+                    </div>
                 </div>
             </div>
 

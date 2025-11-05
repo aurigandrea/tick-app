@@ -79,10 +79,18 @@ class ConsentApp {
     setupEventListeners() {
         // Tab switching
         const recordTab = document.getElementById('record-tab');
+        const requestTab = document.getElementById('request-tab');
         const viewTab = document.getElementById('view-tab');
         
         if (recordTab) {
             recordTab.addEventListener('click', () => this.switchTab('record'));
+        }
+        
+        if (requestTab) {
+            requestTab.addEventListener('click', () => {
+                this.switchTab('request');
+                this.renderPendingRequests();
+            });
         }
         
         if (viewTab) {
@@ -92,10 +100,15 @@ class ConsentApp {
             });
         }
 
-        // Form submission
+        // Form submissions
         const consentForm = document.getElementById('consent-form');
         if (consentForm) {
             consentForm.addEventListener('submit', (e) => this.handleConsentSubmission(e));
+        }
+
+        const requestForm = document.getElementById('request-form');
+        if (requestForm) {
+            requestForm.addEventListener('submit', (e) => this.handleRequestSubmission(e));
         }
 
         // Logout button
@@ -338,9 +351,134 @@ class ConsentApp {
 
         setTimeout(() => messageDiv.remove(), 5000);
     }
+
+    // New consent request functionality
+    async handleRequestSubmission(e) {
+        e.preventDefault();
+        
+        if (!this.currentUser) {
+            this.showMessage('You must be logged in to send consent requests.', 'error');
+            return;
+        }
+
+        const form = e.target;
+        const submitBtn = form.querySelector('.submit-btn');
+        const originalText = submitBtn.textContent;
+
+        try {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+
+            const formData = new FormData(form);
+            const consentRequest = {
+                id: this.generateId(),
+                recipient: formData.get('request-recipient'),
+                activity: formData.get('request-activity'),
+                details: formData.get('request-details'),
+                deadline: formData.get('request-deadline'),
+                requester: this.currentUser.email,
+                requesterName: this.currentUser.user_metadata?.full_name || this.currentUser.email,
+                timestamp: new Date().toISOString(),
+                status: 'pending'
+            };
+
+            if (!consentRequest.recipient || !consentRequest.activity) {
+                throw new Error('Please fill in recipient and activity fields.');
+            }
+
+            // Save request to localStorage (in real app, this would be sent via email/notification)
+            this.saveConsentRequest(consentRequest);
+            
+            this.showMessage('✅ Consent request created! The recipient will be notified to log in and respond.', 'success');
+            form.reset();
+            
+            setTimeout(() => {
+                this.renderPendingRequests();
+            }, 1000);
+
+        } catch (error) {
+            this.showMessage(`❌ Error: ${error.message}`, 'error');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
+    }
+
+    saveConsentRequest(request) {
+        const requests = this.getConsentRequests();
+        requests.push(request);
+        localStorage.setItem('consent_requests', JSON.stringify(requests));
+    }
+
+    getConsentRequests() {
+        try {
+            const requests = localStorage.getItem('consent_requests');
+            return requests ? JSON.parse(requests) : [];
+        } catch (error) {
+            return [];
+        }
+    }
+
+    renderPendingRequests() {
+        const pendingList = document.getElementById('pending-list');
+        if (!pendingList) return;
+
+        const allRequests = this.getConsentRequests();
+        const userRequests = allRequests.filter(req => 
+            req.requester === this.currentUser.email && req.status === 'pending'
+        );
+
+        if (userRequests.length === 0) {
+            pendingList.innerHTML = `
+                <div class="no-pending">
+                    <h3>📭 No pending requests</h3>
+                    <p>You haven't sent any consent requests yet.</p>
+                </div>
+            `;
+            return;
+        }
+
+        const sortedRequests = userRequests.sort((a, b) => 
+            new Date(b.timestamp) - new Date(a.timestamp)
+        );
+
+        pendingList.innerHTML = sortedRequests.map(request => {
+            const isUrgent = request.deadline && new Date(request.deadline) <= new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+            return `
+                <div class="pending-item ${isUrgent ? 'urgent' : ''}">
+                    <div class="pending-header">
+                        <div class="pending-recipient">👤 ${this.escapeHtml(request.recipient)}</div>
+                        <span class="pending-status">⏳ Pending</span>
+                    </div>
+                    <div class="pending-activity">
+                        <strong>Activity:</strong> ${this.escapeHtml(request.activity)}
+                    </div>
+                    ${request.details ? `<div class="pending-details">
+                        <strong>Details:</strong> ${this.escapeHtml(request.details)}
+                    </div>` : ''}
+                    ${request.deadline ? `<div class="pending-deadline">
+                        📅 Deadline: ${this.formatDate(request.deadline)}
+                    </div>` : ''}
+                    <div class="pending-actions">
+                        <button onclick="app.cancelRequest('${request.id}')" class="cancel-btn">
+                            Cancel Request
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    cancelRequest(requestId) {
+        const requests = this.getConsentRequests();
+        const updatedRequests = requests.filter(req => req.id !== requestId);
+        localStorage.setItem('consent_requests', JSON.stringify(updatedRequests));
+        this.renderPendingRequests();
+        this.showMessage('Request cancelled successfully.', 'success');
+    }
 }
 
 // Initialize app when DOM loads
 document.addEventListener('DOMContentLoaded', () => {
-    new ConsentApp();
+    window.app = new ConsentApp();
 });

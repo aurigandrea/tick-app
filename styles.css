@@ -178,8 +178,9 @@ header h1 {
     display: block;
 }
 
-/* Consent Form */
-.consent-form {
+/* Consent Form and Request Form */
+.consent-form,
+.request-form {
     max-width: 600px;
     margin: 0 auto;
 }
@@ -462,4 +463,96 @@ header h1 {
     border-radius: 8px;
     margin-bottom: 20px;
     border: 1px solid #fc8181;
+}
+
+/* Request Consent Styling */
+.pending-requests {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid #e2e8f0;
+}
+
+.pending-requests h3 {
+    color: #4a5568;
+    margin-bottom: 20px;
+}
+
+.pending-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.pending-item {
+    background: #fff8e1;
+    border: 1px solid #ffc107;
+    border-radius: 8px;
+    padding: 20px;
+    position: relative;
+}
+
+.pending-item.urgent {
+    background: #ffebee;
+    border-color: #f44336;
+}
+
+.pending-header {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.pending-recipient {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.pending-status {
+    background: #ffc107;
+    color: #1a1a1a;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.pending-activity {
+    color: #4a5568;
+    margin: 10px 0;
+}
+
+.pending-deadline {
+    color: #718096;
+    font-size: 0.9rem;
+}
+
+.pending-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.cancel-btn {
+    background: #f56565;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+    background: #e53e3e;
+    transform: translateY(-1px);
+}
+
+.no-pending {
+    text-align: center;
+    padding: 30px;
+    color: #718096;
+    background: #f7fafc;
+    border-radius: 8px;
 }
