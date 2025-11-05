@@ -8,6 +8,9 @@ class ConsentApp {
     }
 
     init() {
+        // Start by showing auth section
+        this.showAuthSection();
+        
         // Initialize Netlify Identity
         if (window.netlifyIdentity) {
             window.netlifyIdentity.on('init', (user) => {
@@ -35,39 +38,61 @@ class ConsentApp {
         }
 
         this.setupEventListeners();
-        this.loadRecords();
+        // Only load records if user is logged in
+        if (this.currentUser) {
+            this.loadRecords();
+        }
     }
 
     setupEventListeners() {
-        // Tab switching
-        document.getElementById('record-tab').addEventListener('click', () => {
-            this.switchTab('record');
-        });
+        // Tab switching - only if elements exist
+        const recordTab = document.getElementById('record-tab');
+        const viewTab = document.getElementById('view-tab');
+        const consentForm = document.getElementById('consent-form');
+        const logoutBtn = document.getElementById('logout-btn');
+        const searchFilter = document.getElementById('search-filter');
+        const consentDate = document.getElementById('consent-date');
 
-        document.getElementById('view-tab').addEventListener('click', () => {
-            this.switchTab('view');
-            this.renderRecords();
-        });
+        if (recordTab) {
+            recordTab.addEventListener('click', () => {
+                this.switchTab('record');
+            });
+        }
+
+        if (viewTab) {
+            viewTab.addEventListener('click', () => {
+                this.switchTab('view');
+                this.renderRecords();
+            });
+        }
 
         // Form submission
-        document.getElementById('consent-form').addEventListener('submit', (e) => {
-            this.handleConsentSubmission(e);
-        });
+        if (consentForm) {
+            consentForm.addEventListener('submit', (e) => {
+                this.handleConsentSubmission(e);
+            });
+        }
 
         // Logout button
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            if (window.netlifyIdentity) {
-                window.netlifyIdentity.logout();
-            }
-        });
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                if (window.netlifyIdentity) {
+                    window.netlifyIdentity.logout();
+                }
+            });
+        }
 
         // Search filter
-        document.getElementById('search-filter').addEventListener('input', (e) => {
-            this.filterRecords(e.target.value);
-        });
+        if (searchFilter) {
+            searchFilter.addEventListener('input', (e) => {
+                this.filterRecords(e.target.value);
+            });
+        }
 
         // Set today's date as default
-        document.getElementById('consent-date').valueAsDate = new Date();
+        if (consentDate) {
+            consentDate.valueAsDate = new Date();
+        }
     }
 
     handleUserLogin(user) {
