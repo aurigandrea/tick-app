@@ -42,34 +42,22 @@ class ConsentApp {
     }
 
     loginUser(user) {
-        console.log('loginUser called with:', user);
         this.currentUser = user;
-        
-        console.log('Calling showMainApp...');
         this.showMainApp();
-        
-        console.log('Setting up event listeners...');
         this.setupEventListeners();
-        
-        console.log('Loading records...');
         this.loadRecords();
         
         // Update UI with user email
         const userEmailElement = document.getElementById('user-email');
-        console.log('User email element found:', !!userEmailElement);
         if (userEmailElement) {
             userEmailElement.textContent = user.email;
         }
-        
-        console.log('Login process complete');
     }
 
     logoutUser() {
-        console.log('logoutUser called');
         this.currentUser = null;
         this.records = [];
         this.showLoginScreen();
-        console.log('Logout complete, should show login screen');
     }
 
     showLoginScreen() {
@@ -81,21 +69,11 @@ class ConsentApp {
     }
 
     showMainApp() {
-        console.log('showMainApp called');
         const loginScreen = document.getElementById('login-screen');
         const mainApp = document.getElementById('main-app');
         
-        console.log('Login screen element:', !!loginScreen);
-        console.log('Main app element:', !!mainApp);
-        
-        if (loginScreen) {
-            loginScreen.style.display = 'none';
-            console.log('Login screen hidden');
-        }
-        if (mainApp) {
-            mainApp.style.display = 'block';
-            console.log('Main app shown');
-        }
+        if (loginScreen) loginScreen.style.display = 'none';
+        if (mainApp) mainApp.style.display = 'block';
     }
 
     setupEventListeners() {
@@ -122,18 +100,12 @@ class ConsentApp {
 
         // Logout button
         const logoutBtn = document.getElementById('logout-btn');
-        console.log('Logout button found:', !!logoutBtn);
         if (logoutBtn) {
             logoutBtn.addEventListener('click', () => {
-                console.log('Logout button clicked');
                 if (window.netlifyIdentity) {
-                    console.log('Calling netlifyIdentity.logout()');
                     window.netlifyIdentity.logout();
-                } else {
-                    console.log('netlifyIdentity not available');
                 }
             });
-            console.log('Logout event listener added');
         }
 
         // Search filter

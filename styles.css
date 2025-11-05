@@ -33,12 +33,111 @@ body {
     font-size: 2.5rem;
     margin-bottom: 20px;
     color: #4a5568;
+    font-weight: 700;
 }
 
 .auth-section p {
     font-size: 1.1rem;
     color: #718096;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.fancy-login-btn {
+    position: relative;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 18px 40px;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 200px;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.fancy-login-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.fancy-login-btn:hover::before {
+    left: 100%;
+}
+
+.fancy-login-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(135deg, #7c8ce8 0%, #8b5fb0 100%);
+}
+
+.fancy-login-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+}
+
+.login-icon {
+    font-size: 1.3rem;
+    animation: keyFloat 2s ease-in-out infinite;
+}
+
+.login-text {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.login-arrow {
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+}
+
+.fancy-login-btn:hover .login-arrow {
+    transform: translateX(4px);
+}
+
+.login-subtitle {
+    font-size: 0.9rem;
+    color: #a0aec0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.login-subtitle::before,
+.login-subtitle::after {
+    content: '';
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #cbd5e0, transparent);
+    flex: 1;
+}
+
+@keyframes keyFloat {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-3px);
+    }
 }
 
 .login-btn {
@@ -86,17 +185,22 @@ header h1 {
 }
 
 .logout-btn {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.3);
     color: white;
-    padding: 8px 16px;
-    border-radius: 6px;
+    padding: 10px 20px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
 }
 
 .logout-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Navigation Tabs */

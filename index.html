@@ -11,16 +11,22 @@
     <div class="container">
         <!-- Login Screen -->
         <div id="login-screen" class="auth-section">
-            <h1>🔒 Consent App</h1>
-            <p>Please log in to access the consent recording system.</p>
-            <div id="login-widget"></div>
-            <button onclick="window.netlifyIdentity.open()" class="login-btn">Log In</button>
+            <h1>🔒 Secure Consent App</h1>
+            <p>Please authenticate to access the consent recording system.</p>
+            <div class="login-container">
+                <button onclick="window.netlifyIdentity.open()" class="fancy-login-btn">
+                    <span class="login-icon">🔑</span>
+                    <span class="login-text">Secure Login</span>
+                    <span class="login-arrow">→</span>
+                </button>
+                <p class="login-subtitle">Protected by Netlify Identity</p>
+            </div>
         </div>
 
         <!-- Main App (hidden until authenticated) -->
         <div id="main-app" class="app-section" style="display: none;">
             <header>
-                <h1>Consent Recording System</h1>
+                <h1>📝 Consent Recording System</h1>
                 <div class="user-info">
                     <span id="user-email"></span>
                     <button id="logout-btn" class="logout-btn">Logout</button>
