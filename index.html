@@ -9,15 +9,16 @@
 </head>
 <body>
     <div class="container">
-        <!-- Authentication Section -->
-        <div id="auth-section" class="auth-section">
+        <!-- Login Screen -->
+        <div id="login-screen" class="auth-section">
             <h1>🔒 Consent App</h1>
             <p>Please log in to access the consent recording system.</p>
-            <div data-netlify-identity-button>Login with Netlify Identity</div>
+            <div id="login-widget"></div>
+            <button onclick="window.netlifyIdentity.open()" class="login-btn">Log In</button>
         </div>
 
-        <!-- Main App Section (hidden until authenticated) -->
-        <div id="app-section" class="app-section" style="display: none;">
+        <!-- Main App (hidden until authenticated) -->
+        <div id="main-app" class="app-section" style="display: none;">
             <header>
                 <h1>Consent Recording System</h1>
                 <div class="user-info">
