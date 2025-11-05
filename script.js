@@ -107,18 +107,26 @@ class ConsentApp {
         }
 
         const requestForm = document.getElementById('request-form');
+        console.log('Request form found:', !!requestForm);
         if (requestForm) {
             requestForm.addEventListener('submit', (e) => this.handleRequestSubmission(e));
+            console.log('Request form event listener added');
         }
 
         // Logout button
         const logoutBtn = document.getElementById('logout-btn');
+        console.log('Logout button found:', !!logoutBtn);
         if (logoutBtn) {
             logoutBtn.addEventListener('click', () => {
+                console.log('Logout button clicked');
                 if (window.netlifyIdentity) {
+                    console.log('Calling netlifyIdentity.logout()');
                     window.netlifyIdentity.logout();
+                } else {
+                    console.log('netlifyIdentity not available');
                 }
             });
+            console.log('Logout event listener added');
         }
 
         // Search filter
@@ -354,12 +362,16 @@ class ConsentApp {
 
     // New consent request functionality
     async handleRequestSubmission(e) {
+        console.log('handleRequestSubmission called');
         e.preventDefault();
         
         if (!this.currentUser) {
+            console.log('No current user');
             this.showMessage('You must be logged in to send consent requests.', 'error');
             return;
         }
+
+        console.log('Processing request submission...');
 
         const form = e.target;
         const submitBtn = form.querySelector('.submit-btn');
