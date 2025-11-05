@@ -9,7 +9,6 @@ class ConsentApp {
 
     init() {
         // Initialize Netlify Identity
-        /*
         if (window.netlifyIdentity) {
             window.netlifyIdentity.on('init', (user) => {
                 if (user) {
@@ -30,11 +29,10 @@ class ConsentApp {
 
             // Initialize the widget
             window.netlifyIdentity.init();
+        } else {
+            // No Netlify Identity available - show auth section
+            this.showAuthSection();
         }
-        */
-        
-        // DEMO MODE: Skip authentication and show app directly
-        this.handleUserLogin({ email: 'demo@example.com' });
 
         this.setupEventListeners();
         this.loadRecords();
