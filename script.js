@@ -7,9 +7,9 @@ class ConsentApp {
         
         // EmailJS configuration
         this.emailJSConfig = {
-            publicKey: '4-OUV3n4Z6mgZIkRQ',       // Your EmailJS public key
-            serviceId: 'service_14hq5fh',         // Your EmailJS service ID
-            templateId: 'template_yi3fbnr'        // Your EmailJS template ID
+            publicKey: '4-OUV3n4Z6mgZIkRQ',
+            serviceId: 'service_14hq5fh',
+            templateId: 'template_yi3fbnr'
         };
         
         this.init();
