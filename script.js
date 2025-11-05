@@ -8,12 +8,28 @@ class ConsentApp {
     }
 
     init() {
-        // Start by showing auth section
+        console.log('ConsentApp initializing...');
+        
+        // FORCE show auth section first - no matter what
         this.showAuthSection();
+        
+        // Set up event listeners first
+        this.setupEventListeners();
+        
+        // Check if we're already logged in
+        const currentUser = window.netlifyIdentity && window.netlifyIdentity.currentUser();
+        console.log('Current user on init:', currentUser);
+        
+        if (currentUser) {
+            this.handleUserLogin(currentUser);
+        }
         
         // Initialize Netlify Identity
         if (window.netlifyIdentity) {
+            console.log('Netlify Identity found, setting up listeners...');
+            
             window.netlifyIdentity.on('init', (user) => {
+                console.log('Netlify Identity init event:', user);
                 if (user) {
                     this.handleUserLogin(user);
                 } else {
@@ -22,25 +38,21 @@ class ConsentApp {
             });
 
             window.netlifyIdentity.on('login', (user) => {
+                console.log('Login event:', user);
                 this.handleUserLogin(user);
                 window.netlifyIdentity.close();
             });
 
             window.netlifyIdentity.on('logout', () => {
+                console.log('Logout event');
                 this.handleUserLogout();
             });
 
             // Initialize the widget
             window.netlifyIdentity.init();
         } else {
-            // No Netlify Identity available - show auth section
+            console.log('Netlify Identity not found - showing auth section');
             this.showAuthSection();
-        }
-
-        this.setupEventListeners();
-        // Only load records if user is logged in
-        if (this.currentUser) {
-            this.loadRecords();
         }
     }
 
@@ -96,26 +108,51 @@ class ConsentApp {
     }
 
     handleUserLogin(user) {
+        console.log('handleUserLogin called with:', user);
         this.currentUser = user;
-        document.getElementById('user-email').textContent = user.email;
+        
+        const userEmailElement = document.getElementById('user-email');
+        if (userEmailElement) {
+            userEmailElement.textContent = user.email || 'Unknown User';
+        }
+        
         this.showAppSection();
         this.loadRecords();
+        console.log('User login complete, app section should be visible');
     }
 
     handleUserLogout() {
+        console.log('handleUserLogout called');
         this.currentUser = null;
         this.records = [];
         this.showAuthSection();
+        console.log('User logged out, auth section should be visible');
     }
 
     showAuthSection() {
-        document.getElementById('auth-section').style.display = 'block';
-        document.getElementById('app-section').style.display = 'none';
+        console.log('Showing auth section');
+        const authSection = document.getElementById('auth-section');
+        const appSection = document.getElementById('app-section');
+        
+        if (authSection) {
+            authSection.style.display = 'block';
+        }
+        if (appSection) {
+            appSection.style.display = 'none';
+        }
     }
 
     showAppSection() {
-        document.getElementById('auth-section').style.display = 'none';
-        document.getElementById('app-section').style.display = 'block';
+        console.log('Showing app section');
+        const authSection = document.getElementById('auth-section');
+        const appSection = document.getElementById('app-section');
+        
+        if (authSection) {
+            authSection.style.display = 'none';
+        }
+        if (appSection) {
+            appSection.style.display = 'block';
+        }
     }
 
     switchTab(tabName) {
