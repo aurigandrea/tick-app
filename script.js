@@ -4,6 +4,14 @@ class ConsentApp {
         this.currentUser = null;
         this.records = [];
         this.storageKey = 'consent_records_shared';
+        
+        // EmailJS configuration
+        this.emailJSConfig = {
+            publicKey: 'YOUR_EMAILJS_PUBLIC_KEY', // Replace with your EmailJS public key
+            serviceId: 'YOUR_SERVICE_ID',         // Replace with your EmailJS service ID
+            templateId: 'YOUR_TEMPLATE_ID'        // Replace with your EmailJS template ID
+        };
+        
         this.init();
     }
 
@@ -11,8 +19,17 @@ class ConsentApp {
         // Always start with login screen
         this.showLoginScreen();
         
+        // Initialize EmailJS
+        this.initEmailJS();
+        
         // Wait for Netlify Identity to load
         this.initNetlifyIdentity();
+    }
+
+    initEmailJS() {
+        if (typeof emailjs !== 'undefined') {
+            emailjs.init(this.emailJSConfig.publicKey);
+        }
     }
 
     initNetlifyIdentity() {
@@ -352,6 +369,36 @@ class ConsentApp {
         setTimeout(() => messageDiv.remove(), 5000);
     }
 
+    // Email notification method
+    async sendConsentRequestEmail(consentRequest) {
+        if (typeof emailjs === 'undefined') {
+            throw new Error('EmailJS not loaded');
+        }
+
+        const templateParams = {
+            to_email: consentRequest.recipient,
+            to_name: consentRequest.recipient,
+            from_name: consentRequest.requesterName,
+            from_email: consentRequest.requester,
+            activity: consentRequest.activity,
+            details: consentRequest.details || 'No additional details provided.',
+            deadline: consentRequest.deadline || 'No deadline specified',
+            app_link: 'https://tick-app.netlify.app',
+            request_id: consentRequest.id
+        };
+
+        try {
+            const response = await emailjs.send(
+                this.emailJSConfig.serviceId,
+                this.emailJSConfig.templateId,
+                templateParams
+            );
+            return response;
+        } catch (error) {
+            throw new Error(`Failed to send email: ${error.message}`);
+        }
+    }
+
     // New consent request functionality
     async handleRequestSubmission(e) {
         e.preventDefault();
@@ -386,10 +433,20 @@ class ConsentApp {
                 throw new Error('Please fill in recipient and activity fields.');
             }
 
-            // Save request to localStorage (in real app, this would be sent via email/notification)
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(consentRequest.recipient)) {
+                throw new Error('Please enter a valid email address for the recipient.');
+            }
+
+            // Save request to localStorage
             this.saveConsentRequest(consentRequest);
             
-            this.showMessage('✅ Consent request created! The recipient will be notified to log in and respond.', 'success');
+            // Send email notification
+            submitBtn.textContent = 'Sending Email...';
+            await this.sendConsentRequestEmail(consentRequest);
+            
+            this.showMessage('✅ Consent request created and email sent! The recipient will be notified to log in and respond.', 'success');
             form.reset();
             
             setTimeout(() => {
