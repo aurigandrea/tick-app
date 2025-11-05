@@ -42,16 +42,26 @@ class ConsentApp {
     }
 
     loginUser(user) {
+        console.log('loginUser called with:', user);
         this.currentUser = user;
+        
+        console.log('Calling showMainApp...');
         this.showMainApp();
+        
+        console.log('Setting up event listeners...');
         this.setupEventListeners();
+        
+        console.log('Loading records...');
         this.loadRecords();
         
         // Update UI with user email
         const userEmailElement = document.getElementById('user-email');
+        console.log('User email element found:', !!userEmailElement);
         if (userEmailElement) {
             userEmailElement.textContent = user.email;
         }
+        
+        console.log('Login process complete');
     }
 
     logoutUser() {
@@ -69,11 +79,21 @@ class ConsentApp {
     }
 
     showMainApp() {
+        console.log('showMainApp called');
         const loginScreen = document.getElementById('login-screen');
         const mainApp = document.getElementById('main-app');
         
-        if (loginScreen) loginScreen.style.display = 'none';
-        if (mainApp) mainApp.style.display = 'block';
+        console.log('Login screen element:', !!loginScreen);
+        console.log('Main app element:', !!mainApp);
+        
+        if (loginScreen) {
+            loginScreen.style.display = 'none';
+            console.log('Login screen hidden');
+        }
+        if (mainApp) {
+            mainApp.style.display = 'block';
+            console.log('Main app shown');
+        }
     }
 
     setupEventListeners() {
