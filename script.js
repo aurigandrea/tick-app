@@ -1,6 +1,9 @@
 // Simple Consent App with Netlify Identity
+console.log('Script loading...');
+
 class ConsentApp {
     constructor() {
+        console.log('ConsentApp constructor called');
         this.currentUser = null;
         this.records = [];
         this.storageKey = 'consent_records_shared';
@@ -8,6 +11,7 @@ class ConsentApp {
     }
 
     init() {
+        console.log('ConsentApp init called');
         // Always start with login screen
         this.showLoginScreen();
         
@@ -499,5 +503,7 @@ class ConsentApp {
 
 // Initialize app when DOM loads
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, creating ConsentApp instance');
     window.app = new ConsentApp();
+    console.log('ConsentApp instance created:', window.app);
 });
