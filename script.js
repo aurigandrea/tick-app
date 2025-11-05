@@ -108,9 +108,16 @@ class ConsentApp {
 
         const requestForm = document.getElementById('request-form');
         console.log('Request form found:', !!requestForm);
+        console.log('Request form element:', requestForm);
         if (requestForm) {
-            requestForm.addEventListener('submit', (e) => this.handleRequestSubmission(e));
+            console.log('Adding event listener to request form');
+            requestForm.addEventListener('submit', (e) => {
+                console.log('Request form submit event triggered!');
+                this.handleRequestSubmission(e);
+            });
             console.log('Request form event listener added');
+        } else {
+            console.log('ERROR: Request form not found!');
         }
 
         // Logout button
