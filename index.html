@@ -40,63 +40,22 @@
 
             <!-- Record Consent Tab -->
             <div id="record-section" class="tab-content active">
-                <!-- Received Consent Requests -->
-                <div class="received-requests">
-                    <h2>📬 Consent Requests for You</h2>
-                    <p style="color: #718096; margin-bottom: 20px;">Respond to consent requests sent to your email</p>
-                    <div id="received-requests-list" class="received-list">
-                        <!-- Received requests will be populated here -->
-                    </div>
+                <div class="consent-prompt">
+                    <h3>What are you giving consent to?</h3>
+                    <p>By proceeding, you acknowledge that you understand and agree to the following:</p>
+                    <ul>
+                        <li>Your consent information will be securely recorded</li>
+                        <li>This record serves as proof of your agreement</li>
+                        <li>You may revoke consent at any time by contacting the administrator but it might be too late</li>
+                    </ul>
                 </div>
 
-                <div class="consent-form">
-                    <h2>📝 Record New Consent</h2>
-                    
-                    <div class="consent-prompt">
-                        <h3>What are you giving consent to?</h3>
-                        <p>By proceeding, you acknowledge that you understand and agree to the following:</p>
-                        <ul>
-                            <li>Your consent information will be securely recorded</li>
-                            <li>This record serves as proof of your agreement</li>
-                            <li>You may revoke consent at any time by contacting the administrator but it might be too late</li>
-                        </ul>
+                <!-- Consent Requests for You -->
+                <div class="pending-requests">
+                    <h3>📬 Consent Requests for You</h3>
+                    <div id="received-requests-list" class="pending-list">
+                        <!-- Received requests will be populated here -->
                     </div>
-
-                    <form id="consent-form">
-                        <div class="form-group">
-                            <label for="username">Name *</label>
-                            <input type="text" id="username" name="username" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="request-reference">Responding to a specific request?</label>
-                            <select id="request-reference" name="request-reference">
-                                <option value="">Select a consent request (or choose "Other" below)</option>
-                                <option value="other">Other - I'm giving general consent</option>
-                            </select>
-                            <small style="color: #718096; font-size: 0.9em;">If you received an email with a consent request, it will appear above</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="activity">Activity/Purpose *</label>
-                            <textarea id="activity" name="activity" rows="3" placeholder="Describe what you are giving consent for..." required></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="consent-date">Date *</label>
-                            <input type="date" id="consent-date" name="consent-date" required>
-                        </div>
-
-                        <div class="consent-checkbox">
-                            <label class="checkbox-container">
-                                <input type="checkbox" id="consent-check" required>
-                                <span class="checkmark">✓</span>
-                                I hereby give my explicit consent for the activity described above
-                            </label>
-                        </div>
-
-                        <button type="submit" class="submit-btn">📋 Record Consent</button>
-                    </form>
                 </div>
             </div>
 
@@ -165,6 +124,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=20251106-0130"></script>
+    <script src="script.js?v=20251106-0145"></script>
 </body>
 </html>

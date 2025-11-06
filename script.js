@@ -63,7 +63,6 @@ class ConsentApp {
         this.showMainApp();
         this.setupEventListeners();
         this.loadRecords();
-        this.populateConsentRequestDropdown();
         this.renderReceivedRequests();
         
         // Update UI with user email
@@ -104,7 +103,6 @@ class ConsentApp {
         if (recordTab) {
             recordTab.addEventListener('click', () => {
                 this.switchTab('record');
-                this.populateConsentRequestDropdown();
                 this.renderReceivedRequests();
             });
         }
@@ -124,17 +122,6 @@ class ConsentApp {
         }
 
         // Form submissions
-        const consentForm = document.getElementById('consent-form');
-        if (consentForm) {
-            consentForm.addEventListener('submit', (e) => this.handleConsentSubmission(e));
-        }
-
-        // Request reference dropdown
-        const requestReference = document.getElementById('request-reference');
-        if (requestReference) {
-            requestReference.addEventListener('change', (e) => this.handleRequestReferenceChange(e));
-        }
-
         const requestForm = document.getElementById('request-form');
         if (requestForm) {
             requestForm.addEventListener('submit', (e) => this.handleRequestSubmission(e));
@@ -628,7 +615,7 @@ class ConsentApp {
         this.showMessage('Request cancelled successfully.', 'success');
     }
 
-    acceptRequest(requestId) {
+    async acceptRequest(requestId) {
         const requests = this.getConsentRequests();
         const request = requests.find(req => req.id === requestId);
         
@@ -637,27 +624,31 @@ class ConsentApp {
             return;
         }
 
-        // Create consent record with automatic current date
-        const consentRecord = {
-            id: this.generateId(),
-            username: this.currentUser.user_metadata?.full_name || this.currentUser.email,
-            activity: request.activity,
-            date: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
-            timestamp: new Date().toISOString(),
-            userEmail: this.currentUser.email,
-            ipAddress: 'Self-accepted',
-            requestReference: requestId
-        };
+        try {
+            // Create consent record with automatic current date
+            const consentRecord = {
+                id: this.generateId(),
+                username: this.currentUser.user_metadata?.full_name || this.currentUser.email,
+                activity: request.activity,
+                date: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
+                timestamp: new Date().toISOString(),
+                userEmail: this.currentUser.email,
+                ipAddress: await this.getClientIP(),
+                requestReference: requestId
+            };
 
-        // Add to records
-        this.records.push(consentRecord);
-        this.saveRecords();
+            // Add to records
+            this.records.push(consentRecord);
+            this.saveRecords();
 
-        // Mark request as completed
-        this.markRequestAsCompleted(requestId);
+            // Mark request as completed
+            this.markRequestAsCompleted(requestId);
 
-        this.showMessage('✅ Request accepted and consent recorded!', 'success');
-        this.renderPendingRequests();
+            this.showMessage('✅ Request accepted and consent recorded!', 'success');
+            this.renderPendingRequests();
+        } catch (error) {
+            this.showMessage(`❌ Error accepting request: ${error.message}`, 'error');
+        }
     }
 
     // Render received consent requests for current user
@@ -687,25 +678,25 @@ class ConsentApp {
         receivedList.innerHTML = sortedRequests.map(request => {
             const isUrgent = request.deadline && new Date(request.deadline) <= new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
             return `
-                <div class="received-item ${isUrgent ? 'urgent' : ''}">
-                    <div class="received-header">
-                        <div class="received-sender">📤 From: ${this.escapeHtml(request.requesterName)}</div>
-                        <span class="received-status">⏳ Awaiting Response</span>
+                <div class="pending-item ${isUrgent ? 'urgent' : ''}">
+                    <div class="pending-header">
+                        <div class="pending-recipient">📤 From: ${this.escapeHtml(request.requesterName)}</div>
+                        <span class="pending-status">⏳ Awaiting Response</span>
                     </div>
-                    <div class="received-activity">
+                    <div class="pending-activity">
                         <strong>Consent Needed For:</strong> ${this.escapeHtml(request.activity)}
                     </div>
-                    ${request.details ? `<div class="received-details">
+                    ${request.details ? `<div class="pending-details">
                         <strong>Details:</strong> ${this.escapeHtml(request.details)}
                     </div>` : ''}
-                    ${request.deadline ? `<div class="received-deadline">
+                    ${request.deadline ? `<div class="pending-deadline">
                         📅 Deadline: ${this.formatDate(request.deadline)}
                     </div>` : ''}
-                    <div class="received-actions">
-                        <button onclick="app.respondToRequest('${request.id}')" class="respond-btn">
+                    <div class="pending-actions">
+                        <button onclick="app.respondToRequest('${request.id}')" class="accept-btn">
                             ✅ Give Consent
                         </button>
-                        <button onclick="app.declineRequest('${request.id}')" class="decline-btn">
+                        <button onclick="app.declineRequest('${request.id}')" class="cancel-btn">
                             ❌ Decline
                         </button>
                     </div>
@@ -745,7 +736,7 @@ class ConsentApp {
 
         this.showMessage('✅ Consent given successfully!', 'success');
         this.renderReceivedRequests();
-        this.populateConsentRequestDropdown(); // Update dropdown
+    }
     }
 
     // Decline a received consent request
@@ -765,7 +756,6 @@ class ConsentApp {
 
         this.showMessage('Request declined.', 'success');
         this.renderReceivedRequests();
-        this.populateConsentRequestDropdown(); // Update dropdown
     }
 }
 
