@@ -276,21 +276,34 @@ header h1 {
     color: white;
 }
 
-/* Submit Button */
-.submit-btn {
-    width: 100%;
-    padding: 15px;
+/* Green Buttons - Give Consent, Accept, Respond */
+.submit-btn,
+.accept-btn,
+.respond-btn {
     background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
     color: white;
     border: none;
     border-radius: 8px;
-    font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.submit-btn:hover {
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+}
+
+.accept-btn,
+.respond-btn {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+.submit-btn:hover,
+.accept-btn:hover,
+.respond-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(56, 161, 105, 0.3);
 }
@@ -373,20 +386,26 @@ header h1 {
     justify-content: flex-end;
 }
 
-.withdraw-btn {
-    background: #f56565;
+/* Red Buttons - Decline, Withdraw, Cancel */
+.withdraw-btn,
+.cancel-btn,
+.decline-btn {
+    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
     color: white;
     border: none;
     padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
+    border-radius: 8px;
     font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.withdraw-btn:hover {
-    background: #e53e3e;
-    transform: translateY(-1px);
+.withdraw-btn:hover,
+.cancel-btn:hover,
+.decline-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(245, 101, 101, 0.3);
 }
 
 .no-records {
@@ -553,38 +572,6 @@ header h1 {
     margin-top: 15px;
     display: flex;
     gap: 10px;
-}
-
-.accept-btn {
-    background: #38a169;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-}
-
-.accept-btn:hover {
-    background: #2f855a;
-    transform: translateY(-1px);
-}
-
-.cancel-btn {
-    background: #f56565;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-}
-
-.cancel-btn:hover {
-    background: #e53e3e;
-    transform: translateY(-1px);
 }
 
 .no-pending {

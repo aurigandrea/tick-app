@@ -154,11 +154,52 @@ class ConsentApp {
             searchFilter.addEventListener('input', (e) => this.filterRecords(e.target.value));
         }
 
+        // Setup dynamic event listeners
+        this.setupDynamicEventListeners();
+
         // Set today's date
         const consentDate = document.getElementById('consent-date');
         if (consentDate) {
             consentDate.valueAsDate = new Date();
         }
+    }
+
+    setupDynamicEventListeners() {
+        // Event delegation for dynamic buttons
+        document.addEventListener('click', (e) => {
+            const target = e.target;
+            
+            // Accept request button
+            if (target.classList.contains('accept-btn') && target.dataset.requestId) {
+                this.acceptRequest(target.dataset.requestId);
+                return;
+            }
+            
+            // Cancel request button  
+            if (target.classList.contains('cancel-btn') && target.dataset.requestId) {
+                this.cancelRequest(target.dataset.requestId);
+                return;
+            }
+            
+            // Respond to request button
+            if (target.classList.contains('respond-btn') && target.dataset.requestId) {
+                const response = target.dataset.response;
+                this.respondToRequest(target.dataset.requestId, response);
+                return;
+            }
+            
+            // Decline request button
+            if (target.classList.contains('decline-btn') && target.dataset.requestId) {
+                this.respondToRequest(target.dataset.requestId, 'decline');
+                return;
+            }
+            
+            // Withdraw consent button
+            if (target.classList.contains('withdraw-btn') && target.dataset.recordId) {
+                this.showWithdrawDialog(target.dataset.recordId);
+                return;
+            }
+        });
     }
 
     switchTab(tabName) {
@@ -341,7 +382,7 @@ class ConsentApp {
                     </small>
                 </div>
                 <div class="record-actions">
-                    <button onclick="app.withdrawConsent('${record.id}')" class="withdraw-btn">
+                    <button data-record-id="${record.id}" class="withdraw-btn">
                         🗑️ Withdraw Consent
                     </button>
                 </div>
@@ -561,6 +602,10 @@ class ConsentApp {
         localStorage.setItem('consent_requests', JSON.stringify(requests));
     }
 
+    saveConsentRequests(requests) {
+        localStorage.setItem('consent_requests', JSON.stringify(requests));
+    }
+
     getConsentRequests() {
         try {
             const requests = localStorage.getItem('consent_requests');
@@ -611,10 +656,10 @@ class ConsentApp {
                         📅 Deadline: ${this.formatDate(request.deadline)}
                     </div>` : ''}
                     <div class="pending-actions">
-                        <button onclick="app.acceptRequest('${request.id}')" class="accept-btn">
+                        <button data-request-id="${request.id}" class="accept-btn">
                             ✅ Accept Request
                         </button>
-                        <button onclick="app.cancelRequest('${request.id}')" class="cancel-btn">
+                        <button data-request-id="${request.id}" class="cancel-btn">
                             ❌ Cancel Request
                         </button>
                     </div>
@@ -709,10 +754,10 @@ class ConsentApp {
                         📅 Deadline: ${this.formatDate(request.deadline)}
                     </div>` : ''}
                     <div class="pending-actions">
-                        <button onclick="app.respondToRequest('${request.id}')" class="accept-btn">
+                        <button data-request-id="${request.id}" class="respond-btn">
                             ✅ Give Consent
                         </button>
-                        <button onclick="app.declineRequest('${request.id}')" class="cancel-btn">
+                        <button data-request-id="${request.id}" class="decline-btn">
                             ❌ Decline
                         </button>
                     </div>
