@@ -108,7 +108,6 @@ class ConsentApp {
         if (requestTab) {
             requestTab.addEventListener('click', () => {
                 this.switchTab('request');
-                this.renderPendingRequests();
             });
         }
         
@@ -362,7 +361,7 @@ class ConsentApp {
         }
 
         const templateParams = {
-            to_email: consentRequest.recipientEmail,
+            email: consentRequest.recipientEmail,
             to_name: consentRequest.recipientName,
             from_name: consentRequest.requesterName,
             sender_name: consentRequest.requesterName,
@@ -435,10 +434,6 @@ class ConsentApp {
             
             this.showMessage('✅ Consent request created and email sent! The recipient will be notified to log in and respond.', 'success');
             form.reset();
-            
-            setTimeout(() => {
-                this.renderPendingRequests();
-            }, 1000);
 
         } catch (error) {
             this.showMessage(`❌ Error: ${error.message}`, 'error');
@@ -467,61 +462,10 @@ class ConsentApp {
         }
     }
 
-    renderPendingRequests() {
-        const pendingList = document.getElementById('pending-list');
-        if (!pendingList) return;
-
-        const allRequests = this.getConsentRequests();
-        const userRequests = allRequests.filter(req => 
-            req.requester === this.currentUser.email && req.status === 'pending'
-        );
-
-        if (userRequests.length === 0) {
-            pendingList.innerHTML = `
-                <div class="no-pending">
-                    <h3>📭 No pending requests</h3>
-                    <p>You haven't sent any consent requests yet.</p>
-                </div>
-            `;
-            return;
-        }
-
-        const sortedRequests = userRequests.sort((a, b) => 
-            new Date(b.timestamp) - new Date(a.timestamp)
-        );
-
-        pendingList.innerHTML = sortedRequests.map(request => {
-            const isUrgent = request.deadline && new Date(request.deadline) <= new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-            return `
-                <div class="pending-item ${isUrgent ? 'urgent' : ''}">
-                    <div class="pending-header">
-                        <div class="pending-recipient">👤 ${this.escapeHtml(request.recipientName || request.recipient)} (${this.escapeHtml(request.recipientEmail || request.recipient)})</div>
-                        <span class="pending-status">⏳ Pending</span>
-                    </div>
-                    <div class="pending-activity">
-                        <strong>Activity:</strong> ${this.escapeHtml(request.activity)}
-                    </div>
-                    ${request.details ? `<div class="pending-details">
-                        <strong>Details:</strong> ${this.escapeHtml(request.details)}
-                    </div>` : ''}
-                    ${request.deadline ? `<div class="pending-deadline">
-                        📅 Deadline: ${this.formatDate(request.deadline)}
-                    </div>` : ''}
-                    <div class="pending-actions">
-                        <button data-request-id="${request.id}" class="cancel-btn">
-                            ❌ Cancel Request
-                        </button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-
     cancelRequest(requestId) {
         const requests = this.getConsentRequests();
         const updatedRequests = requests.filter(req => req.id !== requestId);
         localStorage.setItem('consent_requests', JSON.stringify(updatedRequests));
-        this.renderPendingRequests();
         this.showMessage('Request cancelled successfully.', 'success');
     }
 
