@@ -367,6 +367,28 @@ header h1 {
     font-weight: 600;
 }
 
+.record-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.withdraw-btn {
+    background: #f56565;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.withdraw-btn:hover {
+    background: #e53e3e;
+    transform: translateY(-1px);
+}
+
 .no-records {
     text-align: center;
     padding: 40px;

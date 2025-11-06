@@ -33,32 +33,36 @@ class ConsentApp {
     }
 
     initNetlifyIdentity() {
+        console.log('Initializing Netlify Identity...');
         if (window.netlifyIdentity) {
+            console.log('Netlify Identity widget found');
             // Check if user is already logged in
             const user = window.netlifyIdentity.currentUser();
             if (user) {
+                console.log('User already logged in:', user.email);
                 this.loginUser(user);
                 return;
             }
 
             // Set up event listeners
             window.netlifyIdentity.on('login', (user) => {
+                console.log('Login event triggered for user:', user.email);
                 this.loginUser(user);
                 window.netlifyIdentity.close();
             });
 
             window.netlifyIdentity.on('logout', () => {
+                console.log('Logout event triggered');
                 this.logoutUser();
             });
-
-            window.netlifyIdentity.init();
         } else {
-            // Retry if Netlify Identity not loaded yet
-            setTimeout(() => this.initNetlifyIdentity(), 100);
+            console.error('Netlify Identity widget not found');
+            setTimeout(() => this.initNetlifyIdentity(), 1000);
         }
     }
 
     loginUser(user) {
+        console.log('loginUser called for:', user.email);
         this.currentUser = user;
         this.showMainApp();
         this.setupEventListeners();
@@ -70,6 +74,7 @@ class ConsentApp {
         if (userEmailElement) {
             userEmailElement.textContent = user.email;
         }
+        console.log('Login process completed');
     }
 
     logoutUser() {
@@ -87,11 +92,17 @@ class ConsentApp {
     }
 
     showMainApp() {
+        console.log('showMainApp called');
         const loginScreen = document.getElementById('login-screen');
         const mainApp = document.getElementById('main-app');
         
+        console.log('Login screen element:', loginScreen);
+        console.log('Main app element:', mainApp);
+        
         if (loginScreen) loginScreen.style.display = 'none';
         if (mainApp) mainApp.style.display = 'block';
+        
+        console.log('App visibility toggled');
     }
 
     setupEventListeners() {
@@ -328,6 +339,11 @@ class ConsentApp {
                     <small style="color: #718096; margin-left: 10px;">
                         By: ${this.escapeHtml(record.userEmail)}
                     </small>
+                </div>
+                <div class="record-actions">
+                    <button onclick="app.withdrawConsent('${record.id}')" class="withdraw-btn">
+                        🗑️ Withdraw Consent
+                    </button>
                 </div>
             </div>
         `).join('');
@@ -756,6 +772,28 @@ class ConsentApp {
 
         this.showMessage('Request declined.', 'success');
         this.renderReceivedRequests();
+    }
+
+    // Withdraw consent - remove a consent record
+    withdrawConsent(recordId) {
+        if (!confirm('Are you sure you want to withdraw this consent? This action cannot be undone.')) {
+            return;
+        }
+
+        // Find and remove the record
+        const recordIndex = this.records.findIndex(record => record.id === recordId);
+        
+        if (recordIndex === -1) {
+            this.showMessage('Consent record not found.', 'error');
+            return;
+        }
+
+        // Remove the record
+        this.records.splice(recordIndex, 1);
+        this.saveRecords();
+
+        this.showMessage('✅ Consent withdrawn successfully.', 'success');
+        this.renderRecords();
     }
 }
 
