@@ -467,7 +467,7 @@ class ConsentApp {
             to_email: consentRequest.recipientEmail,
             to_name: consentRequest.recipientName,
             from_name: consentRequest.requesterName,
-            from_email: consentRequest.requester,
+            sender_name: consentRequest.requesterName,
             activity: consentRequest.activity,
             details: consentRequest.details || 'No additional details provided.',
             deadline: consentRequest.deadline || 'No deadline specified',
