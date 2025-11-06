@@ -533,6 +533,22 @@ header h1 {
     gap: 10px;
 }
 
+.accept-btn {
+    background: #38a169;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.accept-btn:hover {
+    background: #2f855a;
+    transform: translateY(-1px);
+}
+
 .cancel-btn {
     background: #f56565;
     color: white;
@@ -555,4 +571,98 @@ header h1 {
     color: #718096;
     background: #f7fafc;
     border-radius: 8px;
+}
+
+/* Received Requests Styling */
+.received-requests {
+    margin-bottom: 40px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #8b5cf6;
+}
+
+.received-item {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.received-item:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
+}
+
+.received-item.urgent {
+    border-left: 4px solid #f56565;
+}
+
+.received-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.received-sender {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.received-status {
+    background: #8b5cf6;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.received-activity, .received-details, .received-deadline {
+    margin: 10px 0;
+    color: #4a5568;
+    line-height: 1.5;
+}
+
+.received-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.respond-btn {
+    background: #38a169;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.respond-btn:hover {
+    background: #2f855a;
+    transform: translateY(-1px);
+}
+
+.decline-btn {
+    background: #f56565;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.decline-btn:hover {
+    background: #e53e3e;
+    transform: translateY(-1px);
 }

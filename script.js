@@ -64,6 +64,7 @@ class ConsentApp {
         this.setupEventListeners();
         this.loadRecords();
         this.populateConsentRequestDropdown();
+        this.renderReceivedRequests();
         
         // Update UI with user email
         const userEmailElement = document.getElementById('user-email');
@@ -104,6 +105,7 @@ class ConsentApp {
             recordTab.addEventListener('click', () => {
                 this.switchTab('record');
                 this.populateConsentRequestDropdown();
+                this.renderReceivedRequests();
             });
         }
         
@@ -606,8 +608,11 @@ class ConsentApp {
                         📅 Deadline: ${this.formatDate(request.deadline)}
                     </div>` : ''}
                     <div class="pending-actions">
+                        <button onclick="app.acceptRequest('${request.id}')" class="accept-btn">
+                            ✅ Accept Request
+                        </button>
                         <button onclick="app.cancelRequest('${request.id}')" class="cancel-btn">
-                            Cancel Request
+                            ❌ Cancel Request
                         </button>
                     </div>
                 </div>
@@ -621,6 +626,146 @@ class ConsentApp {
         localStorage.setItem('consent_requests', JSON.stringify(updatedRequests));
         this.renderPendingRequests();
         this.showMessage('Request cancelled successfully.', 'success');
+    }
+
+    acceptRequest(requestId) {
+        const requests = this.getConsentRequests();
+        const request = requests.find(req => req.id === requestId);
+        
+        if (!request) {
+            this.showMessage('Request not found.', 'error');
+            return;
+        }
+
+        // Create consent record with automatic current date
+        const consentRecord = {
+            id: this.generateId(),
+            username: this.currentUser.user_metadata?.full_name || this.currentUser.email,
+            activity: request.activity,
+            date: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
+            timestamp: new Date().toISOString(),
+            userEmail: this.currentUser.email,
+            ipAddress: 'Self-accepted',
+            requestReference: requestId
+        };
+
+        // Add to records
+        this.records.push(consentRecord);
+        this.saveRecords();
+
+        // Mark request as completed
+        this.markRequestAsCompleted(requestId);
+
+        this.showMessage('✅ Request accepted and consent recorded!', 'success');
+        this.renderPendingRequests();
+    }
+
+    // Render received consent requests for current user
+    renderReceivedRequests() {
+        const receivedList = document.getElementById('received-requests-list');
+        if (!receivedList || !this.currentUser) return;
+
+        const allRequests = this.getConsentRequests();
+        const receivedRequests = allRequests.filter(req => 
+            req.recipientEmail === this.currentUser.email && req.status === 'pending'
+        );
+
+        if (receivedRequests.length === 0) {
+            receivedList.innerHTML = `
+                <div class="no-pending">
+                    <h3>📭 No pending requests</h3>
+                    <p>You don't have any consent requests waiting for your response.</p>
+                </div>
+            `;
+            return;
+        }
+
+        const sortedRequests = receivedRequests.sort((a, b) => 
+            new Date(b.timestamp) - new Date(a.timestamp)
+        );
+
+        receivedList.innerHTML = sortedRequests.map(request => {
+            const isUrgent = request.deadline && new Date(request.deadline) <= new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+            return `
+                <div class="received-item ${isUrgent ? 'urgent' : ''}">
+                    <div class="received-header">
+                        <div class="received-sender">📤 From: ${this.escapeHtml(request.requesterName)}</div>
+                        <span class="received-status">⏳ Awaiting Response</span>
+                    </div>
+                    <div class="received-activity">
+                        <strong>Consent Needed For:</strong> ${this.escapeHtml(request.activity)}
+                    </div>
+                    ${request.details ? `<div class="received-details">
+                        <strong>Details:</strong> ${this.escapeHtml(request.details)}
+                    </div>` : ''}
+                    ${request.deadline ? `<div class="received-deadline">
+                        📅 Deadline: ${this.formatDate(request.deadline)}
+                    </div>` : ''}
+                    <div class="received-actions">
+                        <button onclick="app.respondToRequest('${request.id}')" class="respond-btn">
+                            ✅ Give Consent
+                        </button>
+                        <button onclick="app.declineRequest('${request.id}')" class="decline-btn">
+                            ❌ Decline
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // Respond to a received consent request
+    async respondToRequest(requestId) {
+        const requests = this.getConsentRequests();
+        const request = requests.find(req => req.id === requestId);
+        
+        if (!request) {
+            this.showMessage('Request not found.', 'error');
+            return;
+        }
+
+        // Create consent record with automatic current date
+        const consentRecord = {
+            id: this.generateId(),
+            username: this.currentUser.user_metadata?.full_name || this.currentUser.email,
+            activity: request.activity,
+            date: new Date().toISOString().split('T')[0], // Current date
+            timestamp: new Date().toISOString(),
+            userEmail: this.currentUser.email,
+            ipAddress: await this.getClientIP(),
+            requestReference: requestId
+        };
+
+        // Add to records
+        this.records.push(consentRecord);
+        this.saveRecords();
+
+        // Mark request as completed
+        this.markRequestAsCompleted(requestId);
+
+        this.showMessage('✅ Consent given successfully!', 'success');
+        this.renderReceivedRequests();
+        this.populateConsentRequestDropdown(); // Update dropdown
+    }
+
+    // Decline a received consent request
+    declineRequest(requestId) {
+        const requests = this.getConsentRequests();
+        const request = requests.find(req => req.id === requestId);
+        
+        if (!request) {
+            this.showMessage('Request not found.', 'error');
+            return;
+        }
+
+        // Mark as declined instead of completed
+        request.status = 'declined';
+        request.declinedAt = new Date().toISOString();
+        this.saveConsentRequests(requests);
+
+        this.showMessage('Request declined.', 'success');
+        this.renderReceivedRequests();
+        this.populateConsentRequestDropdown(); // Update dropdown
     }
 }
 
