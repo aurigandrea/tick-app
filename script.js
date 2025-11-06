@@ -33,26 +33,21 @@ class ConsentApp {
     }
 
     initNetlifyIdentity() {
-        console.log('Initializing Netlify Identity...');
         if (window.netlifyIdentity) {
-            console.log('Netlify Identity widget found');
             // Check if user is already logged in
             const user = window.netlifyIdentity.currentUser();
             if (user) {
-                console.log('User already logged in:', user.email);
                 this.loginUser(user);
                 return;
             }
 
             // Set up event listeners
             window.netlifyIdentity.on('login', (user) => {
-                console.log('Login event triggered for user:', user.email);
                 this.loginUser(user);
                 window.netlifyIdentity.close();
             });
 
             window.netlifyIdentity.on('logout', () => {
-                console.log('Logout event triggered');
                 this.logoutUser();
             });
         } else {
@@ -62,7 +57,6 @@ class ConsentApp {
     }
 
     loginUser(user) {
-        console.log('loginUser called for:', user.email);
         this.currentUser = user;
         this.showMainApp();
         this.setupEventListeners();
@@ -74,7 +68,6 @@ class ConsentApp {
         if (userEmailElement) {
             userEmailElement.textContent = user.email;
         }
-        console.log('Login process completed');
     }
 
     logoutUser() {
@@ -92,17 +85,11 @@ class ConsentApp {
     }
 
     showMainApp() {
-        console.log('showMainApp called');
         const loginScreen = document.getElementById('login-screen');
         const mainApp = document.getElementById('main-app');
         
-        console.log('Login screen element:', loginScreen);
-        console.log('Main app element:', mainApp);
-        
         if (loginScreen) loginScreen.style.display = 'none';
         if (mainApp) mainApp.style.display = 'block';
-        
-        console.log('App visibility toggled');
     }
 
     setupEventListeners() {
@@ -169,34 +156,29 @@ class ConsentApp {
         document.addEventListener('click', (e) => {
             const target = e.target;
             
-            // Accept request button
             if (target.classList.contains('accept-btn') && target.dataset.requestId) {
                 this.acceptRequest(target.dataset.requestId);
                 return;
             }
             
-            // Cancel request button  
             if (target.classList.contains('cancel-btn') && target.dataset.requestId) {
                 this.cancelRequest(target.dataset.requestId);
                 return;
             }
             
-            // Respond to request button
             if (target.classList.contains('respond-btn') && target.dataset.requestId) {
                 const response = target.dataset.response;
                 this.respondToRequest(target.dataset.requestId, response);
                 return;
             }
             
-            // Decline request button
             if (target.classList.contains('decline-btn') && target.dataset.requestId) {
                 this.respondToRequest(target.dataset.requestId, 'decline');
                 return;
             }
             
-            // Withdraw consent button
             if (target.classList.contains('withdraw-btn') && target.dataset.recordId) {
-                this.showWithdrawDialog(target.dataset.recordId);
+                this.withdrawConsent(target.dataset.recordId);
                 return;
             }
         });
@@ -340,7 +322,6 @@ class ConsentApp {
                 this.records = [];
             }
         } catch (error) {
-            console.warn('Could not load records:', error);
             this.records = [];
         }
     }
