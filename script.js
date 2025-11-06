@@ -197,76 +197,15 @@ class ConsentApp {
         if (selectedContent) selectedContent.classList.add('active');
     }
 
-    async handleConsentSubmission(e) {
-        e.preventDefault();
+    // Mark a consent request as completed
+    markRequestAsCompleted(requestId) {
+        const allRequests = this.getConsentRequests();
+        const request = allRequests.find(req => req.id === requestId);
         
-        if (!this.currentUser) {
-            this.showMessage('You must be logged in to record consent.', 'error');
-            return;
-        }
-
-        const form = e.target;
-        const submitBtn = form.querySelector('.submit-btn');
-        const originalText = submitBtn.textContent;
-
-        try {
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Recording...';
-
-            const formData = new FormData(form);
-            const requestReference = formData.get('request-reference');
-            
-            const consentRecord = {
-                id: this.generateId(),
-                username: formData.get('username'),
-                activity: formData.get('activity'),
-                date: formData.get('consent-date'),
-                timestamp: new Date().toISOString(),
-                userEmail: this.currentUser.email,
-                ipAddress: await this.getClientIP(),
-                requestReference: requestReference && requestReference !== 'other' ? requestReference : null
-            };
-
-            if (!consentRecord.username || !consentRecord.activity || !consentRecord.date) {
-                throw new Error('Please fill in all required fields.');
-            }
-
-            this.records.push(consentRecord);
-            this.saveRecords();
-
-            // If this was in response to a specific request, mark it as completed
-            if (requestReference && requestReference !== 'other') {
-                this.markRequestAsCompleted(requestReference);
-            }
-
-            this.showMessage('✅ Consent recorded successfully!', 'success');
-            form.reset();
-            
-            // Reset dropdown and repopulate it
-            this.populateConsentRequestDropdown();
-            const activityField = document.getElementById('activity');
-            if (activityField) {
-                activityField.readOnly = false;
-                activityField.placeholder = 'Describe what you are giving consent for...';
-            }
-            
-            // Set date back to today
-            const consentDate = document.getElementById('consent-date');
-            if (consentDate) {
-                consentDate.valueAsDate = new Date();
-            }
-
-            // Switch to view tab
-            setTimeout(() => {
-                this.switchTab('view');
-                this.renderRecords();
-            }, 1500);
-
-        } catch (error) {
-            this.showMessage(`❌ Error: ${error.message}`, 'error');
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = originalText;
+        if (request) {
+            request.status = 'completed';
+            request.completedAt = new Date().toISOString();
+            this.saveConsentRequests(allRequests);
         }
     }
 
@@ -421,67 +360,6 @@ class ConsentApp {
         }
 
         setTimeout(() => messageDiv.remove(), 5000);
-    }
-
-    // Populate consent request dropdown with pending requests for current user
-    populateConsentRequestDropdown() {
-        const dropdown = document.getElementById('request-reference');
-        if (!dropdown || !this.currentUser) return;
-
-        const allRequests = this.getConsentRequests();
-        const userRequests = allRequests.filter(req => 
-            req.recipientEmail === this.currentUser.email && req.status === 'pending'
-        );
-
-        // Clear existing options except the default ones
-        dropdown.innerHTML = `
-            <option value="">Select a consent request (or choose "Other" below)</option>
-            <option value="other">Other - I'm giving general consent</option>
-        `;
-
-        // Add pending requests
-        userRequests.forEach(request => {
-            const option = document.createElement('option');
-            option.value = request.id;
-            option.textContent = `${request.requesterName}: ${request.activity.substring(0, 50)}${request.activity.length > 50 ? '...' : ''}`;
-            dropdown.appendChild(option);
-        });
-    }
-
-    // Handle request reference dropdown change
-    handleRequestReferenceChange(e) {
-        const selectedValue = e.target.value;
-        const activityField = document.getElementById('activity');
-        
-        if (!selectedValue || selectedValue === 'other') {
-            // Clear the activity field for manual entry
-            activityField.value = '';
-            activityField.readOnly = false;
-            activityField.placeholder = 'Describe what you are giving consent for...';
-            return;
-        }
-
-        // Find the selected request and populate the activity field
-        const allRequests = this.getConsentRequests();
-        const selectedRequest = allRequests.find(req => req.id === selectedValue);
-        
-        if (selectedRequest) {
-            activityField.value = selectedRequest.activity;
-            activityField.readOnly = true;
-            activityField.placeholder = '';
-        }
-    }
-
-    // Mark a consent request as completed
-    markRequestAsCompleted(requestId) {
-        const allRequests = this.getConsentRequests();
-        const request = allRequests.find(req => req.id === requestId);
-        
-        if (request) {
-            request.status = 'completed';
-            request.completedAt = new Date().toISOString();
-            this.saveConsentRequests(allRequests);
-        }
     }
 
     // Email notification method
