@@ -60,6 +60,15 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="request-reference">Responding to a specific request?</label>
+                            <select id="request-reference" name="request-reference">
+                                <option value="">Select a consent request (or choose "Other" below)</option>
+                                <option value="other">Other - I'm giving general consent</option>
+                            </select>
+                            <small style="color: #718096; font-size: 0.9em;">If you received an email with a consent request, it will appear above</small>
+                        </div>
+
+                        <div class="form-group">
                             <label for="activity">Activity/Purpose *</label>
                             <textarea id="activity" name="activity" rows="3" placeholder="Describe what you are giving consent for..." required></textarea>
                         </div>
@@ -147,6 +156,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=20251106-0000"></script>
+    <script src="script.js?v=20251106-0030"></script>
 </body>
 </html>
