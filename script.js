@@ -383,7 +383,7 @@ class ConsentApp {
             activity: consentRequest.activity,
             details: consentRequest.details || 'No additional details provided.',
             deadline: consentRequest.deadline || 'No deadline specified',
-            app_link: 'https://tick-app.netlify.app',
+            app_link: 'https://recordmyconsent.netlify.app',
             request_id: consentRequest.id
         };
 
