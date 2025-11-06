@@ -125,16 +125,6 @@ class ConsentApp {
             requestForm.addEventListener('submit', (e) => this.handleRequestSubmission(e));
         }
 
-        // Logout button
-        const logoutBtn = document.getElementById('logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', () => {
-                if (window.netlifyIdentity) {
-                    window.netlifyIdentity.logout();
-                }
-            });
-        }
-
         // Search filter
         const searchFilter = document.getElementById('search-filter');
         if (searchFilter) {
@@ -155,6 +145,14 @@ class ConsentApp {
         // Event delegation for dynamic buttons
         document.addEventListener('click', (e) => {
             const target = e.target;
+            
+            // Logout button
+            if (target.id === 'logout-btn' || target.classList.contains('logout-btn')) {
+                if (window.netlifyIdentity) {
+                    window.netlifyIdentity.logout();
+                }
+                return;
+            }
             
             if (target.classList.contains('accept-btn') && target.dataset.requestId) {
                 this.acceptRequest(target.dataset.requestId);
