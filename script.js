@@ -154,11 +154,6 @@ class ConsentApp {
                 return;
             }
             
-            if (target.classList.contains('accept-btn') && target.dataset.requestId) {
-                this.acceptRequest(target.dataset.requestId);
-                return;
-            }
-            
             if (target.classList.contains('cancel-btn') && target.dataset.requestId) {
                 this.cancelRequest(target.dataset.requestId);
                 return;
@@ -513,9 +508,6 @@ class ConsentApp {
                         📅 Deadline: ${this.formatDate(request.deadline)}
                     </div>` : ''}
                     <div class="pending-actions">
-                        <button data-request-id="${request.id}" class="accept-btn">
-                            ✅ Accept Request
-                        </button>
                         <button data-request-id="${request.id}" class="cancel-btn">
                             ❌ Cancel Request
                         </button>
@@ -531,42 +523,6 @@ class ConsentApp {
         localStorage.setItem('consent_requests', JSON.stringify(updatedRequests));
         this.renderPendingRequests();
         this.showMessage('Request cancelled successfully.', 'success');
-    }
-
-    async acceptRequest(requestId) {
-        const requests = this.getConsentRequests();
-        const request = requests.find(req => req.id === requestId);
-        
-        if (!request) {
-            this.showMessage('Request not found.', 'error');
-            return;
-        }
-
-        try {
-            // Create consent record with automatic current date
-            const consentRecord = {
-                id: this.generateId(),
-                username: this.currentUser.user_metadata?.full_name || this.currentUser.email,
-                activity: request.activity,
-                date: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
-                timestamp: new Date().toISOString(),
-                userEmail: this.currentUser.email,
-                ipAddress: await this.getClientIP(),
-                requestReference: requestId
-            };
-
-            // Add to records
-            this.records.push(consentRecord);
-            this.saveRecords();
-
-            // Mark request as completed
-            this.markRequestAsCompleted(requestId);
-
-            this.showMessage('✅ Request accepted and consent recorded!', 'success');
-            this.renderPendingRequests();
-        } catch (error) {
-            this.showMessage(`❌ Error accepting request: ${error.message}`, 'error');
-        }
     }
 
     // Render received consent requests for current user
