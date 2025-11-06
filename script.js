@@ -753,7 +753,6 @@ class ConsentApp {
         this.showMessage('✅ Consent given successfully!', 'success');
         this.renderReceivedRequests();
     }
-    }
 
     // Decline a received consent request
     declineRequest(requestId) {
